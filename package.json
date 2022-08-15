@@ -1,6 +1,6 @@
 {
   "name": "tfvm-windows",
-  "version": "1.4.9",
+  "version": "1.4.10",
   "main": "ind.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,11 +17,7 @@
     "chalk": "^5.0.1",
     "commander": "^9.4.0",
     "compare-versions": "^4.1.3",
-    "conf": "^10.2.0",
-    "file-system": "^1.2.2",
-    "https": "^1.0.0",
-    "node-stream-zip": "^1.15.0",
-    "util": "^0.12.4"
+    "node-stream-zip": "^1.15.0"
   },
   "keywords": [
     "terraform",
