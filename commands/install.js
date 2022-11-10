@@ -5,11 +5,11 @@ import getDirectoriesObj from '../util/getDirectoriesObj.js'
 import download from '../util/installFile.js'
 import unzipFile from '../util/unzipFile.js'
 import fs from 'node:fs/promises'
-import verifySetup from "../util/verifySetup.js"
+import verifySetup from '../util/verifySetup.js'
 import getOSBits from '../util/getOSBits.js'
-import getErrorMessage from "../util/errorChecker.js"
-import getTerraformVersion from "../util/tfVersion.js"
-import getLatest from "../util/getLatest.js"
+import getErrorMessage from '../util/errorChecker.js'
+import getTerraformVersion from '../util/tfVersion.js'
+import getLatest from '../util/getLatest.js'
 
 async function install (installVersion) {
   try {
@@ -18,7 +18,10 @@ async function install (installVersion) {
     installVersion = 'v' + installVersion
     if (!versionRegEx.test(installVersion) && versionNum !== 'latest') {
       console.log(
-        chalk.red.bold('Invalid version syntax')
+        chalk.red.bold('Invalid version syntax.')
+      )
+      console.log(
+        chalk.white.bold('Version should be formatted as \'vX.X.X\'\nGet a list of all current terraform versions here: https://releases.hashicorp.com/terraform/')
       )
     } else if (versionNum === 'latest') {
       const installedVersions = await getInstalledVersions()
@@ -28,20 +31,18 @@ async function install (installVersion) {
         const versionLatest = 'v' + latest
         if (installedVersions && installedVersions.includes(versionLatest) && currentVersion !== versionLatest) {
           console.log(
-            chalk.bold.cyan(`The lastest terraform version is ${latest} and is already installed on your computer. Run 'tfvm use ${latest} to use.`)
+            chalk.bold.cyan(`The latest terraform version is ${latest} and is already installed on your computer. Run 'tfvm use ${latest} to use.`)
           )
         } else if (installedVersions && installedVersions.includes(versionLatest) && currentVersion === versionLatest) {
           const currentVersion = await getTerraformVersion()
           console.log(
             chalk.bold.cyan(`The lastest terraform version is ${currentVersion} and is already installed and in use on your computer.`)
           )
-        }
-        else {
+        } else {
           await installFromWeb(versionLatest, latest)
         }
       }
-    }
-    else {
+    } else {
       const installedVersions = await getInstalledVersions()
       if (installedVersions && installedVersions.includes(installVersion)) {
         console.log(
@@ -52,13 +53,13 @@ async function install (installVersion) {
       }
     }
   } catch (error) {
-      getErrorMessage(error)
+    getErrorMessage(error)
   }
 }
 
 export default install
 
-async function installFromWeb (installVersion, versionNum) {
+export async function installFromWeb (installVersion, versionNum, printMessage = true) {
   const tfvmDir = getDirectoriesObj().tfvmDir
   const zipPath = tfvmDir.concat('\\').concat(`${installVersion}.zip`)
   const newVersionDir = tfvmDir.concat('\\').concat(installVersion)
@@ -68,7 +69,9 @@ async function installFromWeb (installVersion, versionNum) {
   await fs.mkdir(newVersionDir)
   await unzipFile(zipPath, newVersionDir)
   await fs.unlink(zipPath)
-  process.stdout.write(
-    chalk.bold.cyan(`Installation complete. If you want to use this version, type\n\ntfvm use ${versionNum}`)
-  )
+  if (printMessage) {
+    process.stdout.write(
+      chalk.bold.cyan(`Installation complete. If you want to use this version, type\n\ntfvm use ${versionNum}`)
+    )
+  }
 }

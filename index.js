@@ -1,14 +1,14 @@
 #! /usr/bin/env node
 
 import { Command } from 'commander'
-const program = new Command()
 import list from './commands/list.js'
 import current from './commands/current.js'
 import uninstall from './commands/uninstall.js'
 import use from './commands/use.js'
 import install from './commands/install.js'
-import getTFVMVersion from "./util/getTFVMVersion.js"
-import config from "./commands/config.js"
+import getTFVMVersion from './util/getTFVMVersion.js'
+import config from './commands/config.js'
+const program = new Command()
 
 program
   .command('uninstall <version>')
@@ -17,6 +17,7 @@ program
 
 program
   .command('list')
+  .alias('ls')
   .description('List all downloaded version of terraform')
   .action(list)
 
@@ -27,6 +28,7 @@ program
 
 program
   .command('use <version>')
+  .alias('u')
   .description('Use a version of terraform')
   .action(use)
 
@@ -37,8 +39,10 @@ program
 
 program
   .command('install <version>')
-  .description('Use a version of terraform')
+  .alias('i')
+  .description('Install a version of terraform')
   .action(install)
+  .addHelpText('after','Get a list of all current terraform versions here: https://releases.hashicorp.com/terraform/')
 
 
 program.version(await getTFVMVersion(), '-v, --version', 'Output the current version')
